@@ -88,9 +88,8 @@ async function boot() {
     animate(el, { transform: [`translateY(${RISE}px) scale(0.97)`, 'translateY(0px) scale(1)'], opacity: [0, 1] }, out),
     { target: el, offset: ['start 102%', `start ${(64 - i * 5).toFixed(0)}%`] });
   const strong = ['#services'];
-  // section 2, the services: the heading, the line under it and each service's words (their visuals stay still,
-  // the client's word)
-  $$('#services .section-head > :is(h2, h3, p), #services .svc__text').forEach(el => rise(el));
+  // section 2, the services: the heading and the line under it (each service's row has its own parallax, below)
+  $$('#services .section-head > :is(h2, h3, p)').forEach(el => rise(el));
 
   $$('main .section-head, footer .contact__words').forEach(head => {
     if (head.closest('.hero') || strong.some(q => head.closest(q))) return;
@@ -134,12 +133,36 @@ async function boot() {
       { target: hero, offset: ['start start', 'end start'] });
   }
 
-  /* ---------------------------------------------------------------- services: still under the scroll */
-  // on the client's word the services do not move with the scroll (they turned in 3D and slid at two speeds);
-  // what stays is the pointer: the mock inside each visual leans toward it
-  $$('#services .svc__visual').forEach(panel => {
-    const layer = $(':scope > .stage, :scope > .ag, :scope > .cv, :scope > .di', panel);
-    if (layer) lean(panel, layer, 4);
+  /* ---------------------------------------------------------------- services: three depths per row */
+  // CLIENT CHANGE (2026-11-21): "still not that noticeable ... no parallax really". The services had been still under
+  // the scroll (an earlier word of his); now every row moves in depth the whole time it is on screen. Over the
+  // first third of its pass the row arrives: the picture comes up from well below, tipped back and a little small,
+  // and lands flat; the words come up behind it. From there to the top of the screen both keep moving, at
+  // different speeds (the picture faster, the words slower), and the screen inside the picture slower still, so
+  // there are three planes sliding past each other. The pointer still tilts the screen inside the picture.
+  const sv = phone ? 0.7 : 1;
+  const ARRIVE = 0.34;
+  $$('#services .svc').forEach(row => {
+    const text = $(':scope > .svc__text', row), panel = $(':scope > .svc__visual', row);
+    const range = { target: row, offset: through };
+    if (panel) {
+      scroll(animate(panel, {
+        transform: [`perspective(1400px) translateY(${200 * sv}px) rotateX(16deg) scale(0.9)`,
+                    'perspective(1400px) translateY(0px) rotateX(0deg) scale(1)',
+                    `perspective(1400px) translateY(${-110 * sv}px) rotateX(-4deg) scale(1)`],
+        opacity: [0, 1, 1],
+      }, { times: [0, ARRIVE, 1], ease: ['easeOut', 'linear'] }), range);
+      const layer = $(':scope > .stage, :scope > .ag, :scope > .cv, :scope > .di', panel);
+      if (layer && motionValue) {
+        const ly = motionValue(0);
+        scroll(p => ly.set(Math.round((p - 0.5) * 2 * 26 * sv)), range);   // lags its frame: 26px up early, 26px down late
+        lean(panel, layer, 4, { y: ly });
+      } else if (layer) lean(panel, layer, 4);
+    }
+    if (text) scroll(animate(text, {
+      transform: [`translateY(${150 * sv}px)`, 'translateY(0px)', `translateY(${-40 * sv}px)`],
+      opacity: [0, 1, 1],
+    }, { times: [0, ARRIVE + 0.06, 1], ease: ['easeOut', 'linear'] }), range);
   });
 
   /* ---------------------------------------------------------------- why: uncovered from under the services */
