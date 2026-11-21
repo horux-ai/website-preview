@@ -351,6 +351,12 @@
   #contact .contact__grid { align-items: start; row-gap: var(--s-7); }
   #contact .contact h2 { max-width: 14ch; }
   #contact .contact__lead { margin-top: var(--s-4); max-width: 40ch; color: var(--muted); }
+  #contact .contact__book { margin-top: var(--s-6); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
+  /* white on the hills so the booking button stands out (the form's send button keeps the brand colour) */
+  #contact .contact__book .btn--primary { background: #ffffff; color: #0f1112; border-color: #ffffff; box-shadow: 0 6px 20px rgb(0 0 0 / .22); }
+  #contact .contact__book .btn--primary:hover { background: #e9eef0; border-color: #e9eef0; }
+  #contact .contact__book .btn--primary:focus-visible { outline: 2px solid #ffffff; outline-offset: 3px; }
+  #contact .contact__book p { margin: 0; max-width: 28ch; color: var(--muted); }
   #contact .contact__next { list-style: none; margin: var(--s-7) 0 0; padding: 0; display: grid; max-width: 440px; counter-reset: next; }
   #contact .contact__next li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: var(--s-3); padding: var(--s-4) 0; border-top: 1px solid var(--line); }
   #contact .contact__next li:last-child { border-bottom: 1px solid var(--line); }
@@ -396,6 +402,7 @@
     #contact .contact__words > * { grid-column: 1 / -1; }
     #contact .contact__words > h2 { order: 1; }
     #contact .contact__lead { order: 2; }
+    #contact .contact__book { order: 2; }
     #contact .contact__card { order: 3; margin-top: var(--s-6); }
     #contact .contact__next { order: 4; }
     #contact .contact__direct { order: 5; }
@@ -2265,6 +2272,11 @@
         <div class="contact__words">
           <h2 id="close-h">Tell us about the process you want to change</h2>
           <p class="t-lead contact__lead">One process is enough to start. We reply within four hours on a working day.</p>
+          <!-- book a call straight into the team's Google Calendar booking page; the form stays for those who write -->
+          <div class="contact__book">
+            <a class="btn btn--primary btn--arrow" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ16PLCdmf_NiD9gCMr-MuPkLWQGIUDWs72cVmFNE29tb2ITP0KO-AQPpKSMf3Sca7rcj2fDIr7G" target="_blank" rel="noopener">Book a 20-minute call</a>
+            <p>Pick a time that suits you, or write to us with the form.</p>
+          </div>
           <ol class="contact__next" data-contact-steps>
             <li><div><b>We read your note</b><span>A senior engineer reads it and writes back to you directly.</span></div></li>
             <li><div><b>A first call</b><span>We go through the process, the systems behind it and where AI would pay back.</span></div></li>

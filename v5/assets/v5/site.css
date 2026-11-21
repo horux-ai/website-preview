@@ -45,3 +45,18 @@ html { scroll-padding-top: 59px; }
 .nav__logo .brandmark { height: 30px; width: auto; aspect-ratio: 327 / 400; display: block; }
 .nav .nav__logo .brandmark { position: relative; top: -2px; }
 @media (max-width: 639px) { .nav .nav__logo { font-size: 16px; gap: 8px; } .nav .nav__logo .brandmark { height: 28px; width: auto; } }
+
+/* ---- the phone bar, calmer (client, 2026-11-21, after the Codex page on a phone): the 56px bar held a 44px
+   button and a 44px boxed menu button, 6px from its edges. Now the bar is 64px, the button a compact 36px
+   (its tap area still 44px, through ::after), the menu button an unboxed glyph whose right edge sits on the
+   gutter like the name's left edge, and the three share one centre line. Phones only: the desktop bar is unchanged. */
+@media (max-width: 639px) {
+  :root { --nav: 64px; }
+  .nav__bar { gap: 6px; }
+  .nav .nav__logo { font-size: 17px; gap: 8px; letter-spacing: -0.02em; }
+  .nav .nav__logo .brandmark { height: 26px; top: -1px; }
+  .nav:not(.is-open) .nav__actions .btn { position: relative; height: 36px; padding-inline: 14px; font-size: 14px; letter-spacing: -0.005em; }
+  .nav:not(.is-open) .nav__actions .btn::after { content: ""; position: absolute; inset: -4px 0; }
+  .nav__toggle { width: 44px; height: 44px; margin-right: -13px; border: 0; background: none; }
+  .nav__toggle svg { width: 20px; height: 20px; }
+}
