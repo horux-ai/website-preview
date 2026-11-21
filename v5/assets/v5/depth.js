@@ -133,25 +133,34 @@ async function boot() {
       { target: hero, offset: ['start start', 'end start'] });
   }
 
-  /* ---------------------------------------------------------------- services: each row fades up */
-  // CLIENT CHANGE (2026-11-21): after a pass where every row moved in three depths the whole time it was on screen,
-  // he asked for that to go: "I just want a fade in from under for both the text and the animation. Something
-  // simple but noticeable and elegant". So each service's words and its picture rise 80px (56 on a phone) out of
-  // nothing, each on its own stretch of the scroll, from just inside the foot of the screen to a little past the
-  // middle, so the move is seen in the part of the screen being read; then they rest. The words come a step
-  // behind the picture's start. The pointer still tilts the screen inside the picture.
-  const UP = phone ? 56 : 80;
-  const fadeUp = (el, from, to) => scroll(
-    animate(el, { transform: [`translateY(${UP}px)`, 'translateY(0px)'], opacity: [0, 1] }, { ease: 'easeOut' }),
-    { target: el, offset: [`start ${from}%`, `start ${to}%`] });
+  /* ---------------------------------------------------------------- services: each row fades in once */
+  // CLIENT CHANGE (2026-11-21): no scroll animation on the service cards: "remove the scroll animation from the
+  // animation cards of section 2 and keep a simple fade in" (after a pass of scroll-linked parallax and one of a
+  // scroll-linked fade). Nothing here follows the scroll any more: when a service's picture or words come a fifth
+  // of the way into the screen they fade in once, on their own clock, rising 32px over 0.9s, the words a step after
+  // the picture; then they stay put, and scrolling back does not replay it. The pointer still tilts the screen
+  // inside the picture.
+  const fadeIn = (el, delay = 0) => {
+    if (!('IntersectionObserver' in window)) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(32px)';
+    const io = new IntersectionObserver(es => {
+      if (!es.some(e => e.isIntersecting)) return;
+      io.disconnect();
+      animate(el, { opacity: [0, 1], transform: ['translateY(32px)', 'translateY(0px)'] },
+        { duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] })
+        .then?.(() => { el.style.transform = ''; el.style.opacity = ''; });
+    }, { rootMargin: '0px 0px -20% 0px' });
+    io.observe(el);
+  };
   $$('#services .svc').forEach(row => {
     const text = $(':scope > .svc__text', row), panel = $(':scope > .svc__visual', row);
     if (panel) {
-      fadeUp(panel, 96, 52);
+      fadeIn(panel);
       const layer = $(':scope > .stage, :scope > .ag, :scope > .cv, :scope > .di', panel);
       if (layer) lean(panel, layer, 4);
     }
-    if (text) fadeUp(text, 92, 48);
+    if (text) fadeIn(text, phone ? 0 : 0.15);
   });
 
   /* ---------------------------------------------------------------- why: uncovered from under the services */
