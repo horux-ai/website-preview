@@ -135,34 +135,39 @@ async function boot() {
 
   /* ---------------------------------------------------------------- services: three depths per row */
   // CLIENT CHANGE (2026-11-21): "still not that noticeable ... no parallax really". The services had been still under
-  // the scroll (an earlier word of his); now every row moves in depth the whole time it is on screen. Over the
-  // first third of its pass the row arrives: the picture comes up from well below, tipped back and a little small,
-  // and lands flat; the words come up behind it. From there to the top of the screen both keep moving, at
-  // different speeds (the picture faster, the words slower), and the screen inside the picture slower still, so
-  // there are three planes sliding past each other. The pointer still tilts the screen inside the picture.
+  // the scroll (an earlier word of his); now every row moves in depth the whole time it is on screen, with three
+  // planes sliding past each other: the picture fastest, the words slower, the screen inside the picture slower
+  // still. The pointer still tilts the screen inside the picture.
+  // Then: "the effect occurs too soon in the bottom, so when I'm in the centre of it, it is already static". The
+  // first pass landed each row by the time it was a third of the way in and then barely drifted. Now nothing ever
+  // stands still: every value moves at one steady rate from the foot of the screen to the top, and the row is in
+  // its plain pose for one instant only, as its middle crosses the middle of the screen (half way through its pass).
+  // Only the fade is quick: in by the time the row is a fifth of the way in.
   const sv = phone ? 0.7 : 1;
-  const ARRIVE = 0.34;
+  const T = [0, 0.22, 0.5, 1];
+  // a value that runs straight from `a` (entering) through `b` (centred) to `c` (leaving), read at each time in T
+  const line = (a, b, c) => T.map(t => t <= 0.5 ? a + (b - a) * (t / 0.5) : b + (c - b) * ((t - 0.5) / 0.5));
+  const steady = { times: T, ease: 'linear' };
   $$('#services .svc').forEach(row => {
     const text = $(':scope > .svc__text', row), panel = $(':scope > .svc__visual', row);
     const range = { target: row, offset: through };
     if (panel) {
+      const y = line(260 * sv, 0, -220 * sv), rx = line(18, 0, -10), sc = line(0.86, 1, 0.94);
       scroll(animate(panel, {
-        transform: [`perspective(1400px) translateY(${200 * sv}px) rotateX(16deg) scale(0.9)`,
-                    'perspective(1400px) translateY(0px) rotateX(0deg) scale(1)',
-                    `perspective(1400px) translateY(${-110 * sv}px) rotateX(-4deg) scale(1)`],
-        opacity: [0, 1, 1],
-      }, { times: [0, ARRIVE, 1], ease: ['easeOut', 'linear'] }), range);
+        transform: T.map((_, i) => `perspective(1400px) translateY(${y[i].toFixed(1)}px) rotateX(${rx[i].toFixed(2)}deg) scale(${sc[i].toFixed(4)})`),
+        opacity: [0, 1, 1, 1],
+      }, steady), range);
       const layer = $(':scope > .stage, :scope > .ag, :scope > .cv, :scope > .di', panel);
       if (layer && motionValue) {
         const ly = motionValue(0);
-        scroll(p => ly.set(Math.round((p - 0.5) * 2 * 26 * sv)), range);   // lags its frame: 26px up early, 26px down late
+        scroll(p => ly.set(Math.round((p - 0.5) * 2 * 40 * sv)), range);   // lags its frame: 40px up early, 40px down late
         lean(panel, layer, 4, { y: ly });
       } else if (layer) lean(panel, layer, 4);
     }
-    if (text) scroll(animate(text, {
-      transform: [`translateY(${150 * sv}px)`, 'translateY(0px)', `translateY(${-40 * sv}px)`],
-      opacity: [0, 1, 1],
-    }, { times: [0, ARRIVE + 0.06, 1], ease: ['easeOut', 'linear'] }), range);
+    if (text) {
+      const y = line(180 * sv, 0, -90 * sv);
+      scroll(animate(text, { transform: y.map(v => `translateY(${v.toFixed(1)}px)`), opacity: [0, 1, 1, 1] }, steady), range);
+    }
   });
 
   /* ---------------------------------------------------------------- why: uncovered from under the services */
