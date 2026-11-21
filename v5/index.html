@@ -337,6 +337,16 @@
   #why .why p { color: var(--muted); }
   @media (max-width: 1023px) { #why .why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 639px) { #why .why-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); } }
+  /* CLIENT CHANGE (2026-11-21): on a phone the section stands centred: the heading, each object (it sat at the
+     left, placed for a quarter-width column) and each reason under it. */
+  @media (max-width: 639px) {
+    #why .section-head { text-align: center; justify-items: center; }
+    #why .section-head > * { margin-inline: auto; }
+    #why .why { text-align: center; justify-items: center; }
+    #why .why p { max-width: 32ch; }
+    #why .why__fig { width: 100%; }
+    #why .why__fig .iso { left: calc(50% + var(--ox, 92px) - 92px); }   /* outranks the scene's own left (below) */
+  }
   /* ---- the questions, in the footer --------------------------------------------------------------------- */
   /* footer.closing holds two parts (the close, the links); the questions open the links part, and the footer
      grows to fit them instead of keeping one screen */
@@ -969,11 +979,13 @@
   }
   @media (max-width: 639px) { #reach .reach__lower { display: grid; gap: var(--s-5); margin-top: var(--s-5); } }
   @media (max-width: 1023px) { .reach-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--s-6); } }
-  /* a phone bakes every WebGL ground to a still, and this globe's bake is a featureless disc: it shows
-     a rendered frame of the same globe instead */
+  /* CLIENT CHANGE (2026-11-21): on a phone this frame showed a photograph of the globe (a still, on a lighter
+     square than the section). The live globe now turns there too (system.js reachGlobe); the frame is 340px
+     tall so the effect draws the whole globe across the column (radius ~123px at 390 wide, see the script
+     after the frame), and the effect's grain layer, which would mark the frame's edges, is left out. */
   @media (max-width: 639px) {
-    #reach .frame--hero { height: 300px !important; background: url("assets/photos/reach-globe.jpg") center / contain no-repeat !important; }
-    #reach .frame--hero > * { display: none !important; }
+    #reach .frame--hero { height: 340px !important; margin-top: 0; }
+    #reach .frame--hero > div:not([class]) { display: none; }
   }
 
   /* #approach: the five steps come up in order as the list crosses the screen, a hairline in the accent
@@ -2086,6 +2098,14 @@
                data-fx-palette='{"bg":"#0f1112","surface":"#191b1d","ink":"#f2f0ec","muted":"#a2a29e","accent":"#2bb3d6"}'
                data-fx-params='{"speed":2.4,"size":1.3,"arcs":4,"tilt":16,"glow":0.6,"land":0.46,"sea":0.2,"back":0.16,"calm":0,"calmX":0.8,"calmY":0.5,"view":-52,"route":1}'
                role="img" aria-label="A turning globe, opening on the Atlantic, with routes from Latin America to North America and Europe"></div>
+          <!-- a phone: the globe centred in its own frame under the key (calmX 0.8 places it left of the words beside
+               it, which a phone does not have, and draws it small); runs before system.js mounts the effect -->
+          <script>
+            if (matchMedia('(max-width: 639px)').matches) {
+              const g = document.currentScript.previousElementSibling;
+              g.dataset.fxParams = JSON.stringify({ ...JSON.parse(g.dataset.fxParams), calmX: 0.5, calmY: 1 });
+            }
+          </script>
         </div>
       </div>
       <!-- the confirmed figures, once, at the size of a statement; the digits roll once as the row
