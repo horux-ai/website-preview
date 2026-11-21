@@ -7,7 +7,8 @@
   keeps its velocity when the pointer changes direction. Only transform and opacity ever move.
 
   What it does, top to bottom:
-    page       a hairline of progress under the header; every section heading comes up as it arrives
+    page       a hairline of progress under the header; every section's heading and the line under it rise from
+               below and fade in as they arrive (one entrance for every section, contact included)
     hero       the product window opens tilted back and lands flat as the page moves; the words lift away
                ahead of it and the landscape behind sinks more slowly than both; the window leans a little
                toward the pointer
@@ -73,10 +74,19 @@ async function boot() {
   document.body.append(bar);
   scroll(animate(bar, { transform: ['scaleX(0)', 'scaleX(1)'] }, lin));
 
-  $$('main .section-head h2, footer .closing__cta h2').forEach(h => {
-    if (h.closest('.hero') || h.closest('#services')) return;      // the services stay still
-    scroll(animate(h, { transform: [`translateY(${44 * k}px)`, 'translateY(0px)'], opacity: [0.1, 1] }, out),
-      { target: h, offset: ['start 100%', 'start 70%'] });
+  // CLIENT CHANGE (2026-11-21): "there is an inconsistency in the fading in of the titles and the texts". Every
+  // section's words now arrive the one way he liked (approach, products): the heading, then the line under it,
+  // each rising from below as it fades in, the second a step behind. The services' heading joins (it had no
+  // entrance: the services' "no scroll movement" was about their visuals), and the moves that brought the Why
+  // Horux chapter and the contact block down from above (the "uncovered" sheets) are gone.
+  $$('main .section-head, footer .contact__words').forEach(head => {
+    if (head.closest('.hero')) return;
+    // each on its own scroll range: the line under the heading starts as it reaches the screen, so it comes a step
+    // behind by its own place (a phone sets the contact words' box to display: contents, which has no box to measure)
+    $$(':scope > :is(h2, h3, p)', head).forEach(el => {
+      scroll(animate(el, { transform: [`translateY(${44 * k}px)`, 'translateY(0px)'], opacity: [0.1, 1] }, out),
+        { target: el, offset: ['start 100%', 'start 70%'] });
+    });
   });
 
   /* ---------------------------------------------------------------- hero */
@@ -127,9 +137,8 @@ async function boot() {
   // one. The reasons and the globe's block used to be two things: only the reasons were held back, so the gap
   // between the two closed up as the band came into view. Both now ride the same move, on the one timeline of
   // the band's top edge, so the whole dark chapter is uncovered in a single piece.
-  const why = $('#why'), chapter = [why && $(':scope > .wrap', why), $('#reach > .wrap')].filter(Boolean);
-  if (why && chapter.length) scroll(animate(chapter, { transform: [`translateY(${-240 * k}px)`, 'translateY(0px)'] }, lin),
-    { target: why, offset: ['start end', 'start 20%'] });
+  // 2026-11-21: taken off (see the headings above): the chapter came down from above while every other section's
+  // words rise from below
 
   /* ---------------------------------------------------------------- a sentence that lights up word by word */
   // v6, CLIENT CHANGE: [data-v5-words] (the line under "Why companies choose Horux") is read as it is scrolled
@@ -235,7 +244,6 @@ async function boot() {
   });
 
   /* ---------------------------------------------------------------- close: the footer is uncovered */
-  const foot = $('footer.footer'), footIn = foot && $(':scope > .wrap', foot);
-  if (footIn) scroll(animate(footIn, { transform: [`translateY(${-150 * k}px)`, 'translateY(0px)'] }, lin),
-    { target: foot, offset: ['start end', 'start 30%'] });
+  // 2026-11-21: the footer's uncovering (its block came down from above) is taken off; the contact words rise
+  // from below like every section's (see the headings above)
 }
