@@ -1,0 +1,47 @@
+/* v5 site.css: what every page of the site shares (index, contact, privacy, terms). Linked last in each
+   page's <head>, after the kit and the page's own styles.
+
+   These rules used to live in index.html alone, so the header sat in a different place and looked different
+   on the other pages: going from the main page to Contact the logo and the button jumped sideways (9px at
+   1440, 60px at 1920), a hairline appeared under the bar, and the bar lost its scroll state. One file now,
+   so the pages cannot drift apart again. */
+
+/* ---- the page never changes width between pages. A page that fits one screen (Contact on a tall window)
+   has no scrollbar and one that scrolls does, which moved the whole header by half a scrollbar on the way
+   from one to the other. The scrollbar's space is kept on every page. */
+html { scrollbar-gutter: stable; }
+
+/* ---- a link lands with its target's top edge exactly under the header (60px once scrolled, 56px on a
+   phone). system.css sets scroll-padding-top: 0, which puts the target under the bar. */
+html { scroll-padding-top: 59px; }
+@media (max-width: 639px) { html { scroll-padding-top: 55px; } }
+
+/* ---- the wider page (client: "the general width is too tight"). The kit caps the content column at
+   1280px inside 80px gutters; the column runs to 1400px and the gutters ease from 44 to 84px with the
+   screen. Phones and tablets keep the kit's own gutters. */
+@media (min-width: 1024px) { :root { --container: 1400px; --gut: clamp(44px, 4.9vw, 84px); } }
+
+/* ---- the header on scroll (CLIENT CHANGE: system.css keeps the header "the same at every depth, no blur,
+   no shadow"; the client asked for a scroll effect). At the top it is clear, no hairline; once the page
+   moves it turns to frosted paper with a soft shadow, and on a desktop settles 12px shorter (only the bar:
+   --nav, which the layout reads, stays). site.js sets .is-scrolled.
+   The change only animates once the page has settled (html.nav-live, site.js): a page opened part-way
+   down (index.html#services from another page, or Back) shows the bar already in its scrolled state
+   instead of playing the change on arrival. */
+@media (prefers-reduced-motion: no-preference) {
+  html.nav-live .nav { transition: background-color 320ms var(--ease, ease), border-color 320ms var(--ease, ease), box-shadow 320ms var(--ease, ease), height 320ms var(--ease, ease), -webkit-backdrop-filter 320ms, backdrop-filter 320ms; }
+}
+.nav:not(.is-scrolled) { background-color: transparent; border-bottom-color: transparent; }
+.nav.is-scrolled { background-color: color-mix(in oklab, var(--bg) 78%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px); backdrop-filter: saturate(1.4) blur(14px);
+  box-shadow: 0 1px 0 rgb(22 24 26 / .02), 0 8px 24px -12px rgb(22 24 26 / .14); }
+@media (min-width: 1024px) { .nav.is-scrolled { height: calc(var(--nav) - 12px); } }
+/* an open phone menu keeps a solid bar above it */
+.nav:has(.nav__toggle[aria-expanded="true"]) { background-color: var(--bg); }
+
+/* ---- the client's own mark in place of the dealt one: the mark carries the brand, the name sits beside it
+   at the nav-link scale's next step up. The mark is 327x400 (portrait): sized by its height, never squared. */
+.nav .nav__logo { font-size: 17px; gap: 10px; letter-spacing: -0.015em; }
+.nav__logo .brandmark { height: 30px; width: auto; aspect-ratio: 327 / 400; display: block; }
+.nav .nav__logo .brandmark { position: relative; top: -2px; }
+@media (max-width: 639px) { .nav .nav__logo { font-size: 16px; gap: 8px; } .nav .nav__logo .brandmark { height: 28px; width: auto; } }

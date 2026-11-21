@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Horux AI website drafts</title>
+<link rel="icon" href="v6/brand/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
+<style>
+  /* One column: the question, then the three drafts as rows. v6's own tokens. */
+  :root { --bg: #0a0e17; --rule: #222d42; --line: #3a4a68; --cyan: #37bff3; --sand: #d2bf9b; --white: #f4f6fa; --soft: #aab5c5; color-scheme: dark; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; background: var(--bg); color: var(--white); font: 400 17px/1.6 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  main { width: min(100% - 2 * clamp(20px, 5vw, 76px), 980px); margin: 0 auto; padding: clamp(56px, 12vh, 130px) 0 90px; }
+  img { display: block; height: 52px; width: auto; margin-bottom: clamp(36px, 7vh, 64px); }
+  h1 { margin: 0; font-size: clamp(34px, 5vw, 62px); font-weight: 560; font-stretch: 104%; line-height: 1.03; letter-spacing: -0.028em; text-wrap: balance; }
+  main > p { margin: 20px 0 clamp(36px, 7vh, 60px); color: var(--soft); max-width: 56ch; }
+  ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  a { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto; gap: 8px 36px; align-items: baseline; padding: 26px 0; border-bottom: 1px solid var(--rule); color: inherit; text-decoration: none; }
+  a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+  h2 { margin: 0; font-size: clamp(24px, 2.7vw, 38px); font-weight: 560; font-stretch: 104%; letter-spacing: -0.022em; transition: color 0.3s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  a:hover h2 { color: var(--cyan); transform: translateX(8px); }
+  a span { color: var(--soft); }
+  a b { font-stretch: 72%; font-weight: 600; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); white-space: nowrap; }
+  footer { margin-top: 28px; font-size: 14px; color: var(--soft); }
+  @media (max-width: 720px) { a { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <img src="v6/brand/horux-logo.png" alt="Horux AI" width="106" height="52">
+  <h1>Three drafts of the website</h1>
+  <p>Open each one, scroll it to the end and try a demo. Then tell us which one we should take forward.</p>
+  <ul>
+    <li><a href="v1/index.html"><h2>Version 1</h2><span>The current site, light with teal, now with the interactive demos in their original look.</span><b>Open</b></a></li>
+    <li><a href="v5/index.html"><h2>Version 5</h2><span>The dark redesign: one page, the product windows, the hills behind the demos.</span><b>Open</b></a></li>
+    <li><a href="v6/index.html"><h2>Version 6</h2><span>The navy redesign: a 3D process map that the scroll travels, one gate per service.</span><b>Open</b></a></li>
+  </ul>
+  <footer>Drafts for review. The contact forms do not send from these copies.</footer>
+</main>
+</body>
+</html>
