@@ -79,8 +79,21 @@ async function boot() {
   // each rising from below as it fades in, the second a step behind. The services' heading joins (it had no
   // entrance: the services' "no scroll movement" was about their visuals), and the moves that brought the Why
   // Horux chapter and the contact block down from above (the "uncovered" sheets) are gone.
+  // 2026-11-21, CLIENT ASK ("the fade in on scroll is too soft, we need something more and consistent for all
+  // sections"), rolled out section by section on his word, from section 2: the stronger entrance below. It rises
+  // twice as far (96px, 64 on a phone), starts from nothing and comes up a touch small, over a shorter stretch of
+  // the scroll, then rests. Sections not yet on it keep the softer one in the loop after it.
+  const RISE = phone ? 64 : 96;
+  const rise = (el, i = 0) => scroll(
+    animate(el, { transform: [`translateY(${RISE}px) scale(0.97)`, 'translateY(0px) scale(1)'], opacity: [0, 1] }, out),
+    { target: el, offset: ['start 102%', `start ${(64 - i * 5).toFixed(0)}%`] });
+  const strong = ['#services'];
+  // section 2, the services: the heading, the line under it and each service's words (their visuals stay still,
+  // the client's word)
+  $$('#services .section-head > :is(h2, h3, p), #services .svc__text').forEach(el => rise(el));
+
   $$('main .section-head, footer .contact__words').forEach(head => {
-    if (head.closest('.hero')) return;
+    if (head.closest('.hero') || strong.some(q => head.closest(q))) return;
     // each on its own scroll range: the line under the heading starts as it reaches the screen, so it comes a step
     // behind by its own place (a phone sets the contact words' box to display: contents, which has no box to measure)
     $$(':scope > :is(h2, h3, p)', head).forEach(el => {

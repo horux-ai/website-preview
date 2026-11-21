@@ -20,6 +20,12 @@ const params = {
   calm:    { default: 0.4,  min: 0,    max: 1,    step: 0.01 }, // a quiet patch of the page ground where text sits
   calmX:   { default: 0.5,  min: 0,    max: 1,    step: 0.01 },
   calmY:   { default: 0.55, min: 0,    max: 1,    step: 0.01 },
+  // 2026-11-21, CLIENT ASK ("the mountains and cloud behind are soft, we need more movement on scroll"): how far
+  // the page has scrolled past this ground, 0 at rest. Set by the page (assets/v5/depth.js) as it scrolls; every
+  // plane answers at its own depth, so the landscape moves in layers: the clouds sweep across, the far hills
+  // barely shift, the middle ridge more, the near hill sinks and slides the most. 0 everywhere else, so no other
+  // ground changes.
+  scroll:  { default: 0,    min: 0,    max: 1.5,  step: 0.001 },
 };
 
 const frag = /* glsl */ `
@@ -56,45 +62,48 @@ void main() {
   float sy = clamp(uv.y / hz, 0.0, 1.0);
   vec3 col = mix(u_skyTop, u_skyMid, smoothstep(0.0, 0.75, sy));
   col = mix(col, u_skyLow, pow(smoothstep(0.3, 1.0, sy), 1.5));
-  vec2 sun = u_sun + vec2(0.16 * sin(t * 2.1), 0.0);
+  float sc = u_scroll;
+  vec2 sun = u_sun + vec2(0.16 * sin(t * 2.1) - 0.1 * sc, 0.05 * sc);
   vec2 ds = (p - sun) * vec2(0.45, 1.0);
   float glow = exp(-dot(ds, ds) * 5.0);
   col = mix(col, u_glow, glow * 0.65);
   // sky dabs: long and nearly level, a touch lighter and warmer where they catch the glow
-  float sk = strokes(p, normalize(vec2(1.0, 0.1 * sin(p.x * 1.3 + so.x))), 1.2, 7.5, so + vec2(t * 0.5, 0.0), soft);
+  float sk = strokes(p, normalize(vec2(1.0, 0.1 * sin(p.x * 1.3 + so.x))), 1.2, 7.5, so + vec2(t * 0.5 + 1.6 * sc, 0.0), soft);
   col = mix(col, u_glow, clamp(sk, 0.0, 1.0) * 0.22 * bk * (0.3 + 0.7 * sy));
   col.x -= clamp(-sk, 0.0, 1.0) * 0.035 * bk;
 
   // far hills: a hazy band at the horizon, almost in focus
   // v5: each plane's skyline travels sideways with the drift, the near one fastest (a slow pan with depth); at the
   // small drift the cards use it is far too slow to see, at the hero's 0.6 it is about 5, 9 and 14 px a second
-  float farY = hz + 0.035 * fx_fbm(vec2(p.x * 1.8 + 3.1 + t * 0.017, 1.7) + so) + 0.01 * fx_noise(vec2(p.x * 7.0 + t * 0.066, 4.0) + so);
+  float farX = p.x + 0.06 * sc, midX = p.x + 0.18 * sc, nearX = p.x + 0.4 * sc;   // the scroll's sideways pan, by depth
+  float farY = hz + 0.04 * sc + 0.035 * fx_fbm(vec2(farX * 1.8 + 3.1 + t * 0.017, 1.7) + so) + 0.01 * fx_noise(vec2(farX * 7.0 + t * 0.066, 4.0) + so);
   float wf = 0.003 + 0.01 * bl;
   vec3 farCol = mix(u_far, u_skyLow, 0.3 * glow);
   col = mix(col, farCol, smoothstep(farY - wf, farY + wf, uv.y));
 
   // a middle ridge, rising gently on the other side, a step deeper
-  float hm = hz + 0.07 + u_dir * 0.1 * p.x + 0.035 * fx_fbm(vec2(p.x * 1.4 + 9.1 + t * 0.023, 2.3) + so);
+  float hm = hz + 0.07 + 0.11 * sc + u_dir * 0.1 * midX + 0.035 * fx_fbm(vec2(midX * 1.4 + 9.1 + t * 0.023, 2.3) + so);
   float wm = 0.005 + 0.025 * bl;
   vec3 midCol = mix(u_mid, u_near, smoothstep(hm, hm + 0.35, uv.y) * 0.5);
-  float ms = strokes(p, normalize(vec2(1.0, u_dir * 0.1)), 2.2, 15.0, so + 3.0 + vec2(t * 0.1, 0.0), soft);
+  float ms = strokes(vec2(midX, p.y - 0.11 * sc), normalize(vec2(1.0, u_dir * 0.1)), 2.2, 15.0, so + 3.0 + vec2(t * 0.1, 0.0), soft);
   midCol = mix(midCol, u_far, clamp(ms, 0.0, 1.0) * 0.35 * bk);
   col = mix(col, midCol, smoothstep(hm - wm, hm + wm, uv.y));
 
   // the near hill: one long diagonal, the most defocused plane, its crest lit
   float ta = tan(radians(u_slope));
-  float hy = hz + u_hillY - u_dir * ta * p.x + 0.065 * fx_fbm(vec2(p.x * 1.1 + 7.3 + t * 0.029, 4.2) + so);
+  float hy = hz + u_hillY + 0.26 * sc - u_dir * ta * nearX + 0.065 * fx_fbm(vec2(nearX * 1.1 + 7.3 + t * 0.029, 4.2) + so);
   float wn = 0.008 + 0.05 * bl;
   float near = smoothstep(hy - wn, hy + wn * 0.6, uv.y);
   float into = clamp((uv.y - hy) / 0.45, 0.0, 1.0);
-  float sx = (p.x - sun.x) * 0.6;
+  float sx = (nearX - sun.x) * 0.6;
   float lit = 0.6 + 0.4 * exp(-sx * sx);
   vec3 nearCol = mix(u_nearLit, u_near, smoothstep(0.0, 0.5, into / lit));
   nearCol = mix(nearCol, u_deep, smoothstep(0.4, 1.0, into));
   // brush: dabs along the slope that trade lit and shade tones, so the grass reads as paint
   vec2 dv = normalize(vec2(1.0, -u_dir * ta));
-  float b = 0.7 * strokes(p, dv, 2.4, 15.0, so + 7.0 + vec2(t * 0.12, 0.0), soft)
-          + 0.45 * strokes(p, normalize(dv + vec2(0.0, 0.3 * u_dir)), 5.0, 28.0, so + 11.0, soft);
+  vec2 pn = vec2(nearX, p.y - 0.26 * sc);                 // the near hill's own frame, so its dabs ride with it
+  float b = 0.7 * strokes(pn, dv, 2.4, 15.0, so + 7.0 + vec2(t * 0.12, 0.0), soft)
+          + 0.45 * strokes(pn, normalize(dv + vec2(0.0, 0.3 * u_dir)), 5.0, 28.0, so + 11.0, soft);
   nearCol = mix(nearCol, u_nearLit, clamp(b, 0.0, 1.0) * 0.6 * bk * (1.0 - 0.6 * into));
   nearCol = mix(nearCol, u_deep, clamp(-b, 0.0, 1.0) * 0.5 * bk);
   col = mix(col, nearCol, near);
