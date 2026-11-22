@@ -170,6 +170,12 @@ html.dk { scrollbar-color: #3a3c3f var(--n-bg); accent-color: var(--n-accent); c
    the ground hid the contact's hills under the fade, and the shadow drew a dark band at the edge. The products
    stand on nothing here (the page under them is the same night ground) and cast no shadow. */
 .dk.v5-depth #products { background-color: transparent; box-shadow: none; }
+/* and the pointer's mist (assets/v5/mist.js) across the same seam: the products' own canvas stopped dead at their
+   foot and the contact's started dead 320px above it, so a trail drawn over the seam showed both edges (client).
+   Over that shared 320px the one fades out as the other fades in, as the hills do. (The products' canvas in the
+   hills' frame already fades with that frame.) */
+.dk #products > .mist--under { -webkit-mask-image: linear-gradient(#000 calc(100% - 320px), transparent); mask-image: linear-gradient(#000 calc(100% - 320px), transparent); }
+.dk #contact > .contact__sky > .mist { -webkit-mask-image: linear-gradient(transparent, #000 320px); mask-image: linear-gradient(transparent, #000 320px); }
 
 /* ---- contact: the words on the night hills, the form a dark card ------------------------------------------ */
 .dk footer#contact { background: var(--n-bg); color: var(--n-ink); --ink: var(--n-ink); --muted: rgb(242 240 236 / .78);
