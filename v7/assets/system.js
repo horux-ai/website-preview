@@ -486,7 +486,10 @@ async function visuals() {
   // CLIENT CHANGE (2026-11-21): the globe in #reach "is static in mobile when it should be moving". It turns on a
   // phone too (a light dot field; fx frees its context once it leaves the screen, so one WebGL context at a time).
   const reachGlobe = el => !!el.closest('#reach') && el.dataset.fx === 'dotted-globe';
-  const moving = grounds.filter(el => (!phone || ((heroHills(el) || reachGlobe(el)) && !kindOther())) && el.closest('.hero, .section--hero') && !box(el).querySelector('[data-print], [data-scene]'));
+  // v7 TEST: the service cards' aurora (silk-folds in the hero's teals) drifts live like the hero's ground, on a phone
+  // too; fx frees each one's context once it is off screen, so only the card in view draws
+  const svcAurora = el => !!el.closest('#services .svc__visual[data-aurora]');
+  const moving = grounds.filter(el => (svcAurora(el) && !kindOther()) || ((!phone || ((heroHills(el) || reachGlobe(el)) && !kindOther())) && el.closest('.hero, .section--hero') && !box(el).querySelector('[data-print], [data-scene]')));
   const live = el => moving.includes(el);
   const [fx, ui] = await Promise.all([
     grounds.length || glows.length ? import(new URL('effects/fx.js', HERE).href).then(m => m.default) : null,
