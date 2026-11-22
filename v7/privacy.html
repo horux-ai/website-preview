@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" class="dk" data-type="software" data-radius="soft" data-buttons="solid" data-motion>
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy at HoruxAI</title>
+<meta name="description" content="What HoruxAI does with the information you send through this website.">
+<link rel="icon" href="assets/brand/favicon.png" type="image/png">
+<meta name="theme-color" content="#0f1112">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<style>
+:root {
+  --p-bg: #fbfaf8; --p-surface: #f1efea; --p-ink: #16181a; --p-muted: #64666a;
+  --p-accent: #0096bb; --p-accent-ink: #111111; --p-action: #16181a; --p-action-ink: #ffffff;
+  --p-inv-bg: #16181a; --p-inv-surface: #232426; --p-inv-ink: #f5f3ef; --p-inv-muted: #979796;
+  --p-inv-accent: #0096bb; --p-inv-accent-ink: #111111; --p-inv-action: #f5f3ef; --p-inv-action-ink: #16181a;
+  --font-display: "Host Grotesk", system-ui, sans-serif;
+  --font-text: "Host Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --display-weight: 500; --display-tracking: -0.035em; --display-tracking-xl: -0.04em;
+}
+.page { padding: calc(var(--nav) + 96px) 0 96px; }
+.page h2 { margin-top: var(--s-8); }
+.page p { max-width: 62ch; margin-top: var(--s-3); }
+/* the header (the client's mark, its scroll state, the page width) is assets/v5/site.css, shared by every page */
+/* this page's footer is one line, not the kit's closing section (which is a full screen tall, and left a whole
+   empty screen under the page): it takes its own height */
+footer.closing { height: auto; min-height: 0; padding-block: var(--s-5); }
+footer.closing > .wrap { flex: none; display: block; }   /* the kit's two-row grid (a close above, links below) left 64px of gap over nothing */
+</style>
+<link rel="stylesheet" href="assets/v5/site.css?v=1121b">
+<link rel="stylesheet" href="assets/v5/dark.css?v=1121b">
+</head>
+<body>
+<header class="nav nav--centre">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Skip to content</a>
+    <a class="nav__logo" href="index.html"><img class="brandmark" src="assets/brand/horux-mark.png" alt="" width="25" height="30">HoruxAI</a>
+    <nav class="nav__links" aria-label="Main">
+      <div class="nav__item"><a class="nav__link" href="index.html#services">Services</a></div>
+      <div class="nav__item"><a class="nav__link" href="index.html#products">Products</a></div>
+      <div class="nav__item"><a class="nav__link" href="index.html#why">Why Horux</a></div>
+      <div class="nav__item"><a class="nav__link" href="index.html#approach">How we work</a></div>
+      <div class="nav__item"><a class="nav__link" href="index.html#contact">Contact</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="index.html#contact">Book a call</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect x="2.25" y="3.25" width="13.5" height="11.5" rx="3.25" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M7 3.5v11" stroke="currentColor" stroke-width="1.7"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap page">
+    <h1>Privacy</h1>
+    <p class="t-lead">What happens to the information you send us through this website.</p>
+
+    <h2>What this site collects</h2>
+    <p>Nothing automatically. This page has no analytics, no advertising tags and no cookies of its own. Nothing you do here is tracked or stored.</p>
+
+    <h2>What happens when you write to us</h2>
+    <p>The contact form and every button on this site open your own email program addressed to contact@horuxai.com; nothing you type in the form is stored by this website. We receive whatever you choose to write: your name, your email address, your company and your question. We use it to answer you and to carry on the conversation you started.</p>
+
+    <h2>How long we keep it</h2>
+    <p>For as long as we are talking, and afterwards for as long as our records of client work require. If you ask us to delete your messages, we delete them.</p>
+
+    <h2>Who else sees it</h2>
+    <p>Nobody outside HoruxAI. We do not sell, rent or share what you send us, and we do not add you to a mailing list you did not ask for.</p>
+
+    <h2>Client data in projects</h2>
+    <p>This notice covers the website only. Data inside the systems we build for clients is governed by the contract and the data processing agreement for that engagement.</p>
+
+    <h2>Your rights</h2>
+    <p>You can ask what we hold about you, ask for it to be corrected, or ask for it to be deleted. Write to contact@horuxai.com and we will answer within four hours on a working day.</p>
+
+    <p><a class="link" href="index.html">Back to the main page</a></p>
+  </div>
+</main>
+
+<footer class="footer closing" id="contact">
+  <div class="wrap">
+    <div class="closing__links">
+      <div class="footer__legal">
+        <span>&copy; 2026 HoruxAI &nbsp; <a href="privacy.html">Privacy</a> &nbsp; <a href="terms.html">Terms</a></span>
+        <div class="socials"></div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="module" src="assets/system.js?v=1121c"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script src="assets/v5/site.js?v=1119a"></script>
+</body>
+</html>

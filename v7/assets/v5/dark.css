@@ -1,0 +1,205 @@
+/* v5 dark.css: the night version of the v4 page. Linked last in <head>, after site.css.
+
+   Night ink: a warm near-black in the same family as v4's dark bands (#16181a), the brand teal lifted a step
+   so it holds AA on the ground, the hills turned to the landscape effect's own dusk, and the cards (the hero's
+   app, the service mocks, the contact form) dark too (client's choice over white cards).
+
+   <html class="dk"> carries it. system.css derives the ground tokens from --p-*; .dk redefines the palette and
+   re-derives them, then the rules below fix what v4 drew in fixed light colours. */
+
+:root {
+  --n-bg: #0f1112;        /* page ground */
+  --n-surface: #191b1d;   /* one step up: cards, the browser chrome */
+  --n-raise: #212326;     /* two steps up: the url field, fills inside cards */
+  --n-band: #16181a;      /* v4's ink: the why/reach band and the site foot */
+  --n-ink: #f2f0ec;       /* 17.4:1 on the ground */
+  --n-muted: #a2a29e;     /* 7.6:1 on the ground, 6.8:1 on the surface */
+  --n-soft: #7e7f7c;      /* hints and placeholders on cards: 4.6:1 on the surface */
+  --n-accent: #2bb3d6;    /* 7.9:1 on the ground: links, the lit state */
+  --n-accent-ink: #071216;
+  --n-action: #f2f0ec;    /* the primary button: the ink, as v4's was the ink on light */
+  --n-action-ink: #0f1112;
+  --n-edge: rgb(255 255 255 / .08);
+  --n-card-shadow: 0 1px 2px rgb(0 0 0 / .45), 0 22px 44px -18px rgb(0 0 0 / .75);
+}
+
+.dk {
+  --p-bg: var(--n-bg); --p-surface: var(--n-surface); --p-ink: var(--n-ink); --p-muted: var(--n-muted);
+  --p-accent: var(--n-accent); --p-accent-ink: var(--n-accent-ink);
+  --p-action: var(--n-action); --p-action-ink: var(--n-action-ink);
+  --p-inv-bg: var(--n-band); --p-inv-surface: #202225; --p-inv-ink: var(--n-ink); --p-inv-muted: var(--n-muted);
+  --p-inv-accent: var(--n-accent); --p-inv-accent-ink: var(--n-accent-ink);
+  --p-inv-action: var(--n-action); --p-inv-action-ink: var(--n-action-ink);
+  --bg: var(--p-bg); --surface: var(--p-surface); --ink: var(--p-ink); --muted: var(--p-muted);
+  --accent: var(--p-accent); --accent-ink: var(--p-accent-ink); --card: var(--p-surface);
+  --action: var(--p-action); --action-ink: var(--p-action-ink);
+  --line: color-mix(in oklab, var(--ink) 12%, transparent);
+  --line-strong: color-mix(in oklab, var(--ink) 24%, transparent);
+  --fx-bg: var(--bg); --fx-surface: var(--surface); --fx-ink: var(--ink); --fx-muted: var(--muted);
+  --fx-accent: var(--accent); --fx-accent-ink: var(--accent-ink);
+  color-scheme: dark;
+}
+html.dk, html.dk body { background-color: var(--n-bg); color: var(--n-ink); }
+.dk ::selection { background: color-mix(in oklab, var(--n-accent) 38%, var(--n-bg)); color: var(--n-ink); }
+html.dk { scrollbar-color: #3a3c3f var(--n-bg); accent-color: var(--n-accent); caret-color: var(--n-accent); }
+.dk :focus-visible { outline-color: var(--n-accent); }
+.dk .v5-progress { background: var(--n-accent); }
+
+/* one night from top to foot (client: "the transition from one section to next is unnoticeable"; a version that
+   kept v4's lighter bands and eased between them was tried and the client chose this one). v4 changes ground
+   between sections (the ink band under #why and #reach, the surface under #approach, the ink foot) and the depth
+   layer draws a rounded sheet edge over the next section; on the night those steps read as lines. Every section
+   stands on the page ground here; cards keep their own raised surface. */
+.dk :is(main > section, footer#contact, .sitefoot) { --bg: var(--n-bg); background-color: var(--n-bg); }
+/* the foot lies inside the contact section, over the bottom of its hills, whose deep tone is a touch lighter and
+   textured: a flat ground there drew a line (client). It starts clear and eases into the night, so the hills
+   thin out into it. */
+.dk footer#contact .sitefoot { background: linear-gradient(rgb(15 17 18 / 0), var(--n-bg) 280px); }
+/* the pointer's mist over the foot (assets/v5/mist.js): the contact section's canvas runs on behind the foot and
+   is hidden by that same ease, and the foot's own canvas lay over it at full strength, so the mist doubled at the
+   foot's top edge (a line the client saw). The foot's canvas comes in by the same ease the other goes out by. */
+.dk footer#contact .sitefoot > .mist { -webkit-mask-image: linear-gradient(transparent, #000 280px); mask-image: linear-gradient(transparent, #000 280px); }
+
+/* the secondary button: the kit fills it with the ground, a black slab on the hills; a film of the ink here */
+.dk .btn--secondary { background: color-mix(in oklab, var(--n-ink) 7%, transparent); border-color: color-mix(in oklab, var(--n-ink) 30%, transparent); }
+.dk .btn--secondary:hover { background: color-mix(in oklab, var(--n-ink) 13%, transparent); border-color: color-mix(in oklab, var(--n-ink) 46%, transparent); }
+@media (max-width: 639px) { .dk .btn-row > .btn--secondary { background: none; border-color: transparent; } }
+
+/* ---- the header ----------------------------------------------------------------------------------------- */
+.dk .nav.is-scrolled { background-color: color-mix(in oklab, var(--n-bg) 74%, transparent);
+  box-shadow: 0 1px 0 rgb(255 255 255 / .05), 0 10px 28px -14px rgb(0 0 0 / .6); }
+.dk .nav__menu { --bg: var(--n-bg); --ink: var(--n-ink); --muted: var(--n-muted); --action: var(--n-action); --action-ink: var(--n-action-ink); --line: color-mix(in oklab, var(--n-ink) 12%, transparent); }
+
+/* ---- the hero ------------------------------------------------------------------------------------------- */
+/* on the hills the words read in the ink, not the grey: the horizon's light sits behind the lead line */
+.dk .hero__lead { color: color-mix(in oklab, var(--n-ink) 84%, var(--n-bg)); }
+.dk .hero__proof { color: color-mix(in oklab, var(--n-ink) 78%, var(--n-bg)); }
+/* the app window: the night UI palette (v4 pinned it white, index.html .hero__window > .ly-piece.app) */
+.dk .hero--centred .hero__window > .ly-piece.app {
+  --fx-bg: var(--n-surface); --fx-surface: var(--n-raise); --fx-ink: var(--n-ink);
+  --fx-muted: var(--n-muted); --fx-accent: var(--n-accent); --fx-accent-ink: var(--n-accent-ink);
+  --u-tile: var(--n-raise);
+  --u-tile-edge: inset 0 0 0 1px rgb(255 255 255 / .08), 0 1px 2px rgb(0 0 0 / .4);
+  /* a window lifted off the night: a rim of light on its edge and a long soft shadow under it */
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), 0 1px 2px rgb(0 0 0 / .5), 0 40px 80px -36px rgb(0 0 0 / .85);
+  border-color: var(--n-edge);
+}
+/* the browser chrome: v4 drew it in fixed light greys */
+.dk .app.app--browser > .bz { background: #141618; }
+.dk .bz__tab { color: #8e8f8c; }
+.dk .bz__tab.is-on svg, .dk .bzr__x { color: #6f706e; }
+.dk :is(.bz__new, .bz__nav, .bzr__i) { color: #8e8f8c; }
+.dk .bz__nav svg:nth-child(2) { color: #4a4b4a; }
+.dk .bz__url { background: var(--n-raise); color: var(--n-ink); }
+.dk :is(.bz__url svg, .bz__path) { color: #8e8f8c; }
+.dk .bz__me { background: #2b6f80; }
+.dk .bzr__i.is-on { box-shadow: 0 0 0 1px var(--u-line-2), 0 1px 2px rgb(0 0 0 / .4); }
+.dk .ui-dots i { box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / .3); }
+
+/* ---- the kit's UI panels on the page (services, products): cards, a step up from the ground ------------- */
+.dk .ui-panel, .dk .app.ui { --fx-bg: var(--n-surface); --fx-surface: var(--n-raise); --u-tile: var(--n-raise);
+  --u-tile-edge: inset 0 0 0 1px rgb(255 255 255 / .08), 0 1px 2px rgb(0 0 0 / .4); }
+.dk .app.ui { box-shadow: inset 0 1px 0 rgb(255 255 255 / .05), var(--n-card-shadow); border-color: var(--n-edge); }
+
+/* ---- services: the mocks on the dusk panels ------------------------------------------------------------- */
+/* one card recipe for every mock v4 drew white */
+.dk #services :is(.da-chat, .di__card, .cv) { background: var(--n-surface); border-color: var(--n-edge); color: var(--n-ink); box-shadow: var(--n-card-shadow); }
+.dk #services :is(.da-chat__head, .cv__head, .cv__stats) { border-color: var(--n-edge); }
+/* the customer's own words: the ink bubble, light on a dark card (v4: dark on a white card) */
+.dk #services :is(.da-msg--me, .co__msg--me) { background: var(--n-ink); color: var(--n-bg); }
+.dk #services :is(.da-msg--bot, .da-typing) { background: rgb(255 255 255 / .06); }
+.dk #services :is(.da-chat__av, .da-chat__input i, .co__send, .di__ok, .di__state) { background: var(--n-ink); color: var(--n-bg); }
+.dk #services :is(.da-chat__meta, .di__k, .di__nhead, .di__q > span:last-child, .di__count, .cv__cam, .cv__time, .cv__stats) { color: var(--n-muted); }
+.dk #services :is(.da-chat__input, .co__ph) { color: var(--n-soft); }
+.dk #services .da-chat__input { border-color: rgb(255 255 255 / .14); }
+.dk #services .da-typing i { background: var(--n-soft); }
+.dk #services .da-c li, .dk #services :is(.cv__agent, .di__match) { color: #c9c8c4; }
+.dk #services :is(.da-c__v, .di__v, .di__chead, .cv__agent b, .cv__counts b, .di__match svg) { color: var(--n-ink); }
+.dk #services .da-c__bar { background: rgb(255 255 255 / .08); }
+.dk #services .da-c__bar > i { background: color-mix(in oklab, var(--n-ink) 42%, var(--n-surface)); }
+.dk #services .da-src { background: var(--n-raise); border-color: rgb(255 255 255 / .1); color: var(--n-muted); }
+/* the brand teal on dark: the lifted one */
+.dk #services :is(.da-dash__live i, .da-dash__bars li:first-child .da-dash__bb > i, .da-c li:first-child .da-c__bar > i) { background: var(--n-accent); }
+.dk #services .da-dash__sweep { background: linear-gradient(90deg, transparent, var(--n-accent), transparent); }
+/* the orb: its glow halves on the night, where the same light reads twice as strong */
+.dk :is(#services, #contact) .orb { box-shadow: 0 0 calc(var(--s) * .22) rgb(0 150 187 / .26), 0 0 calc(var(--s) * .5) rgb(202 188 159 / .18); }
+.dk :is(#services, #contact) .orb.is-speak { box-shadow: 0 0 calc(var(--s) * .3) rgb(0 150 187 / .38), 0 0 calc(var(--s) * .7) rgb(202 188 159 / .26); }
+
+/* document intelligence: the invoice stays paper (a printed document is paper at night too), dimmed a step so
+   it does not glare; the product's card beside it is the dark card */
+.dk #services .di { color: var(--n-ink); }
+.dk #services .di__paper { filter: drop-shadow(0 1px 1px rgb(0 0 0 / .4)) drop-shadow(0 14px 22px rgb(0 0 0 / .55)); }
+.dk #services .di__doc { background: #e6e2da; }
+.dk #services .di__f, .dk #services .di__next { border-color: rgb(255 255 255 / .07); }
+.dk #services .di__v::before { background: rgb(255 255 255 / .1); }
+.dk #services .di__match { background: rgb(255 255 255 / .05); }
+.dk #services .di__route { background: var(--n-ink); color: rgb(15 17 18 / .78); }
+.dk #services :is(.di__route b, .di__route svg) { color: var(--n-bg); }
+.dk #services .di__f.is-live { background: linear-gradient(90deg, color-mix(in oklab, var(--n-accent) 14%, transparent), transparent 70%); }
+.dk #services :is(.di__wires path) { stroke: var(--n-accent); }
+.dk #services .di__wires circle { fill: var(--n-accent); }
+.dk #services .di__type { background: #0a86a5; }
+
+/* computer vision: the camera's picture keeps its own colours (it is footage), a touch dimmer at night */
+.dk #services .cv__feed { filter: brightness(.86) saturate(.92); }
+.dk #services .cv__live i { background: #ff6369; }
+.dk #services .cv__alert svg { color: #ff6369; }
+.dk #services .cv__counts .cv__flag b { color: #ff7b80; }
+
+/* ---- how we work: the stack and the path ---------------------------------------------------------------- */
+.dk :is(.path__n, .path__k, .path__v) { color: var(--n-ink); }
+@keyframes path-n { from { color: var(--n-ink); } 60% { color: var(--n-accent); } to { color: var(--n-ink); } }
+/* the plates: dark glass slabs with a lit top edge (v4: white glass on the sand); the agents' plate keeps the teal */
+.dk .builtin__plate { background: rgb(33 35 38 / .88); border-color: rgb(255 255 255 / .14); color: var(--n-ink); --ec: #3b3e42;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .04), 0 1px 0 rgb(0 0 0 / .3);
+  background-image: linear-gradient(rgb(255 255 255 / .07), transparent 58%); }
+/* its name in ink: the orb face is pale most of the way round, and the page's light ink all but vanished on it */
+.dk .builtin__plate--ai { background: #0d3a46; border-color: rgb(43 179 214 / .5); color: #16181a; background-image: none;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .1), 0 0 0 1px rgb(0 0 0 / .2); }
+.dk .builtin__shadow { background: rgb(0 0 0 / .6); }
+.dk .builtin__casts b { background: #000; opacity: .45; }
+
+/* ---- products --------------------------------------------------------------------------------------------- */
+.dk #arm .arm__stage.is-new { background: var(--n-ink); color: var(--n-bg); box-shadow: inset 0 0 0 1px var(--n-ink); }
+@keyframes arm-lit { 0%, 35% { background: #0a86a5; color: #fff; box-shadow: inset 0 0 0 1px #0a86a5; } }
+.dk.v5-depth #arm { box-shadow: 0 22px 44px -26px rgb(0 0 0 / .8); }
+/* CLIENT CHANGE (2026-11-22): "between the contact section and the product section ... I can see the separator line;
+   the background should feel continuous". The products' hills fade out over their last 320px and the contact's
+   hills start 320px up behind them, so the one landscape runs into the other. But the night ground every section
+   gets above (an opaque page ground) and this sheet's shadow sat on the products, which lie over the contact:
+   the ground hid the contact's hills under the fade, and the shadow drew a dark band at the edge. The products
+   stand on nothing here (the page under them is the same night ground) and cast no shadow. */
+.dk.v5-depth #products { background-color: transparent; box-shadow: none; }
+/* and the pointer's mist (assets/v5/mist.js) across the same seam: the products' own canvas stopped dead at their
+   foot and the contact's started dead 320px above it, so a trail drawn over the seam showed both edges (client).
+   Over that shared 320px the one fades out as the other fades in, as the hills do. (The products' canvas in the
+   hills' frame already fades with that frame.) */
+.dk #products > .mist--under { -webkit-mask-image: linear-gradient(#000 calc(100% - 320px), transparent); mask-image: linear-gradient(#000 calc(100% - 320px), transparent); }
+.dk #contact > .contact__sky > .mist { -webkit-mask-image: linear-gradient(transparent, #000 320px); mask-image: linear-gradient(transparent, #000 320px); }
+
+/* ---- contact: the words on the night hills, the form a dark card ------------------------------------------ */
+.dk footer#contact { background: var(--n-bg); color: var(--n-ink); --ink: var(--n-ink); --muted: rgb(242 240 236 / .78);
+  --line: rgb(255 255 255 / .14); --line-strong: rgb(255 255 255 / .3); }
+.dk #contact :is(.contact__words, .contact__lead) { color: var(--n-ink); }
+.dk #contact .contact__words { --muted: rgb(242 240 236 / .8); --line: rgb(255 255 255 / .16); }
+.dk #contact .contact__next span { color: rgb(242 240 236 / .8); }
+.dk #contact .contact__next.is-live li:first-child::before, .dk #contact .contact__next.is-live li:first-child b::after { color: var(--n-accent); }
+.dk #contact .contact__card {
+  --bg: var(--n-surface); --surface: var(--n-raise); --ink: var(--n-ink); --muted: var(--n-muted); --accent: var(--n-accent);
+  --action: var(--n-action); --action-ink: var(--n-action-ink);
+  --line: rgb(255 255 255 / .1); --line-strong: rgb(255 255 255 / .2);
+  background: var(--n-surface); color: var(--n-ink);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), 0 0 0 1px var(--n-edge), 0 1px 2px rgb(0 0 0 / .5), 0 32px 64px -30px rgb(0 0 0 / .85); }
+.dk #contact .field :is(input, select, textarea) { background-color: #141618; color: var(--n-ink); border-color: rgb(255 255 255 / .14); caret-color: var(--n-accent); }
+.dk #contact .field :is(input, select, textarea):hover { border-color: rgb(255 255 255 / .26); }
+.dk #contact .field :is(input, select, textarea):focus-visible { border-color: var(--n-ink); box-shadow: 0 0 0 3px rgb(242 240 236 / .12); }
+.dk #contact .field :is(input, textarea)::placeholder { color: var(--n-soft); }
+.dk #contact .field select {
+  background: #141618 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' fill='none' stroke='%23f2f0ec' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 14px center / 12px no-repeat; }
+.dk #contact .field select option { background: var(--n-surface); color: var(--n-ink); }
+.dk #contact .contact__card ::selection { background: color-mix(in oklab, var(--n-accent) 38%, var(--n-surface)); }
+@media (max-width: 1023px) {
+  .dk #contact .contact__next { background: var(--n-surface); color: var(--n-ink); --muted: var(--n-muted); --line: rgb(255 255 255 / .1); box-shadow: 0 0 0 1px var(--n-edge); }
+  .dk #contact .contact__next span { color: var(--n-muted); }
+  .dk #contact .contact__next.is-live li:first-child::before, .dk #contact .contact__next.is-live li:first-child b::after { color: var(--n-accent); }
+}

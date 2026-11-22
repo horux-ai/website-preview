@@ -6,5 +6,6 @@ This repository holds build output only; the source lives in the private `horux-
 - `v1/` the current site, with the demos in their original look
 - `v5/` the dark redesign
 - `v6/` the navy "process map" redesign
+- `v7/` test: v5 with an aurora video behind the hero
 
 The contact forms do not send from here: these copies have no server behind them.
