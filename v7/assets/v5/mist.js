@@ -142,7 +142,11 @@ function start() {
   };
 
   let px = 0, py = 0, pt = 0, has = false, owed = 0, clock = 0;
+  // off until asked for: a triple click anywhere turns the mist on, another triple click turns it off again
+  let on = false;
+  addEventListener('click', e => { if (e.detail === 3) { on = !on; has = false; owed = 0; } });
   addEventListener('pointermove', e => {
+    if (!on) return;
     if (e.pointerType && e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
     const x = e.clientX, y = e.clientY, now = e.timeStamp;
     const el = e.target && e.target.closest ? e.target.closest('.mist-zone') : null, z = el && byZone.get(el);
