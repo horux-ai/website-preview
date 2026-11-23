@@ -87,18 +87,12 @@ async function boot() {
   const rise = (el, i = 0) => scroll(
     animate(el, { transform: [`translateY(${RISE}px) scale(0.97)`, 'translateY(0px) scale(1)'], opacity: [0, 1] }, out),
     { target: el, offset: ['start 102%', `start ${(64 - i * 5).toFixed(0)}%`] });
-  const strong = ['#services'];
-  // section 2, the services: the heading and the line under it (each service's row has its own parallax, below)
-  $$('#services .section-head > :is(h2, h3, p)').forEach(el => rise(el));
-
+  // 2026-11-23, CLIENT GO: "apply it to all sections after 2 as well": every section's heading and the line under
+  // it take the services' entrance (each on its own scroll range, so the line comes a step behind by its own
+  // place; a phone sets the contact words' box to display: contents, which has no box to measure)
   $$('main .section-head, footer .contact__words').forEach(head => {
-    if (head.closest('.hero') || strong.some(q => head.closest(q))) return;
-    // each on its own scroll range: the line under the heading starts as it reaches the screen, so it comes a step
-    // behind by its own place (a phone sets the contact words' box to display: contents, which has no box to measure)
-    $$(':scope > :is(h2, h3, p)', head).forEach(el => {
-      scroll(animate(el, { transform: [`translateY(${44 * k}px)`, 'translateY(0px)'], opacity: [0.1, 1] }, out),
-        { target: el, offset: ['start 100%', 'start 70%'] });
-    });
+    if (head.closest('.hero')) return;
+    $$(':scope > :is(h2, h3, p)', head).forEach(el => rise(el));
   });
 
   /* ---------------------------------------------------------------- hero */
@@ -162,6 +156,25 @@ async function boot() {
     }
     if (text) fadeIn(text, phone ? 0 : 0.15);
   });
+
+  // 2026-11-23, CLIENT GO ("apply it to all sections after 2 as well"): what each later section holds comes in the
+  // services' way, once, on its own clock, a step apart when several arrive together. What already moves with the
+  // scroll by design stays as it is: the globe coming forward and the approach's stack closing.
+  const later = [
+    ['#why .why-grid > .why', 0.12],
+    ['#reach .reach__lower', 0],
+    ['#reach .reach-facts > div', 0.1],
+    ['#approach .change > *', 0.15],
+    ['#products .grid > *, #products .ui.app', 0.15],
+    ['#contact .contact__book, #contact .contact__next, #contact .contact__card', 0.15],
+  ];
+  const taken = new Set();
+  for (const [sel, step] of later) {
+    $$(sel).filter(el => ![...taken].some(t => t.contains(el))).forEach((el, i) => {
+      taken.add(el);
+      fadeIn(el, phone ? 0 : i * step);
+    });
+  }
 
   /* ---------------------------------------------------------------- why: uncovered from under the services */
   // the way the products and the footer come into view: the services are a sheet lying over this band, and what
@@ -271,11 +284,7 @@ async function boot() {
   /* ---------------------------------------------------------------- reach: the globe comes forward, the figures rise */
   const reach = $('#reach'), globe = reach && $('.frame--hero', reach);
   if (globe && !phone) scroll(animate(globe, { transform: ['scale(0.84) translateY(50px)', 'scale(1.1) translateY(-30px)'] }, lin), { target: reach, offset: through });
-  const facts = reach && $('.reach-facts', reach);
-  if (facts) $$(':scope > div', facts).forEach((f, i) => {
-    scroll(animate(f, { transform: [`translateY(${(70 + i * 26) * k}px)`, 'translateY(0px)'], opacity: [0, 1] }, out),
-      { target: facts, offset: ['start 100%', `start ${72 - i * 4}%`] });
-  });
+  // (the figures under it fade in once with the other sections' contents, above)
 
   /* ---------------------------------------------------------------- close: the footer is uncovered */
   // 2026-11-21: the footer's uncovering (its block came down from above) is taken off; the contact words rise
